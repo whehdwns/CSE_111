@@ -1,0 +1,35 @@
+Using sqlite3
+--Lab_1--
+1. go to sqlite3 folder
+2. run sqlite3.exe (Database Name).db in terminal
+3. wrtie or copy Tables
+4. type .tables to check whether the tables are in the database
+
+--Lab_2--
+1. Download dbgen file in catcourse
+2. Extract the dbgen file
+3. Change make.suit to makefile (file type: .suite -> .file)
+4. Go to makefile 
+	CC=gcc
+	WORKLOAD =TPCH
+	DATABASE = SQL_SERVER
+	MACHINE= LINUX or WIN32
+
+5. type make ->  ./dbgen -s 0.01 in terminal
+6. it will generate the 8 tbl files (customer, orders, lineitem, nation, region, part, partsupp, supplier)
+(For me, i moved tbl files into sqlite3 folder)
+7. Go to sqlite3 folder and run sqlite3.exe (your Database Name).db in terminal
+8. type .tables to see you are in right database
+9.type
+	.import customer.tbl customer
+	.import orders.tbl orders
+	.import lineitem.tbl lineitem
+	.import nation.tbl nation
+	.import region.tbl region
+	.import part.tbl part
+	.import partsupp.tbl partsupp
+	.import supplier.tbl supplier
+10. check whether you load correct amount of data
+(customer 1500 / lineitem 60175/ nation 25/ region 5/ orders 15000/ part 2000/ partsupp 8000/ supplier 100)
+12. 	SELECT COUNT(*)
+	FROM (tablenames);

@@ -1,0 +1,8 @@
+.import customer.tbl customer
+.import orders.tbl orders
+.import lineitem.tbl lineitem
+.import nation.tbl nation
+.import region.tbl region
+.import part.tbl part
+.import partsupp.tbl partsupp
+.import supplier.tbl supplier
