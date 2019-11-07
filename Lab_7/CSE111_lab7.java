@@ -9,70 +9,86 @@ import java.util.Scanner;
 public class CSE111_lab7 {
 	public static Connection conn = null;
 	public static ResultSet rs;
-	public static Statement stat  = null;
 	public static Scanner input   = new Scanner(System.in);
 	public static void main(String [] args) throws SQLException {
 			System.out.println("MENU");
-			System.out.println("1. Connect To Database");
-			System.out.println("2. Create Table");
-			System.out.println("3. New User");
-			System.out.println("4. Find the supplier with the smallest number of warehouses");
-			System.out.println("5. Find the maximum warehouse capacity across all the suppliers.");
-			System.out.println("6. List all the warehouses in EUROPE with capacity smaller tha nX, where X is taken as an input from the user.");
-			System.out.println("7. For a supplier name given by the user, find whether all its warehouses are capable to fit all its products. ");
-			System.out.println("8. For a nation given by the user, print all the warehouses in that country, in descending order of their capacity.");
-			System.out.println("9. Update Warehouse Supplier");
-			System.out.println("10. Disconnect to Database");
-			int user_input = 0;
-			user_input = input.nextInt();
-			switch(user_input) {
-				case 1:
-					connect();
-					break;
-				case 2:
-					createtable();
-					break;
-				case 3:
-					newuser();
-					break;
-				case 4:
-					query1();
-					break;
-				case 5:
-					query2();
-					break;
-				case 6:
-					query3();
-					break;
-				case 7:
-					query4();
-					break;
-				case 8:
-					query5();
-					break;
-				case 9:
-					query6();
-					break;
-				case 10:
-					close();
-					break;
-				default:
-					System.out.println("Please input a valid menu option");
-					break;
-			}
-			/*connect();
-			createtable();
-			newuser();
-			query1();
-			query2();
-			query3();
-			query4();
-			query5();
-			query6();
-			close();
-			*/
-	
-
+			Scanner input = new Scanner(System.in);
+			try {
+				while(true) {
+					System.out.println("1. Connect To Database");
+					System.out.println("2. Create Table");
+					System.out.println("3. New User");
+					System.out.println("4. Query 1");
+							//Find the supplier with the smallest number of warehouses");
+					System.out.println("5. Query 2");
+							//Find the maximum warehouse capacity across all the suppliers.");
+					System.out.println("6. Query 3");
+							//List all the warehouses in EUROPE with capacity smaller tha nX, where X is taken as an input from the user.");
+					System.out.println("7. Query 4");
+							//For a supplier name given by the user, find whether all its warehouses are capable to fit all its products. ");
+					System.out.println("8. Query 5");
+							//For a nation given by the user, print all the warehouses in that country, in descending order of their capacity.");
+					System.out.println("9. Query 6");
+							//Update Warehouse Supplier");
+					System.out.println("10. Disconnect to Database");
+					//int user_input = 0;
+					int user_input = input.nextInt();
+					switch(user_input) {
+						case 1:
+							connect();
+							break;
+						case 2:
+							createtable();
+							break;
+						case 3:
+							newuser(conn, input);
+							break;
+						case 4:
+							query1();
+							break;
+						case 5:
+							query2();
+							break;
+						case 6:
+							query3();
+							break;
+						case 7:
+							query4();
+							break;
+						case 8:
+							query5();
+							break;
+						case 9:
+							query6();
+							break;
+						case 10:
+							close();
+							break;
+						default:
+							System.out.println("Please input a valid menu option");
+							break;
+					}
+				}
+			} catch(SQLException e)
+		    {
+			      System.err.println(e.getMessage());
+			    }
+			    finally
+			    {
+			      try
+			      {
+			        if(conn != null)
+			        {
+			          input.close();
+			          conn.close();
+			        }
+			      }
+			      catch(SQLException e)
+			      {
+			        System.err.println(e.getMessage());
+			      }
+			    }
+			    input.close();
 	}
 	
 	public static void connect() {
@@ -93,70 +109,93 @@ public class CSE111_lab7 {
 			Statement stat = conn.createStatement();
 			stat.executeUpdate("DROP TABLE IF EXISTS warehouse");
 			String toinput = ("CREATE TABLE warehouse (w_warehousekey DECIMAL(3,0) NOT NULL, w_name CHAR(25) NOT NULL, w_supplierkey DECIMAL(2,0) NOT NULL, w_capacity DECIMAL(6,2) NOT NULL, w_address VARCHAR(40) NOT NULL, w_nationkey DECIMAL(2,0) NOT NULL);");
-			stat.executeUpdate(toinput);
+			PreparedStatement stats = conn.prepareStatement(toinput);
+			stats.executeUpdate();
+			//stat.executeUpdate(toinput);
 		}catch(SQLException e) {
 			System.err.println(e.getMessage());
 		}
 		System.out.println("Created");
 	}
 
-	public static void newuser() throws SQLException{
-		String warehousename, supplier,capacity, address, nation;
-		int suppkey, nationkey =0;
-		Statement stat = conn.createStatement();
-		System.out.print("Enter the warehouse name:");
-		warehousename = "'"+input.nextLine()+"'";
-		System.out.print("Enter the supplier name:");
-		supplier  = "'"+input.nextLine()+"'";
-		System.out.print("Enter the capacity:");
-		capacity = "'"+input.nextLine()+"'";
-		System.out.print("Enter the address");
-		address = "'"+input.nextLine()+"'";
-		System.out.print("Enter the Nation:");
-		nation = "'"+input.nextLine()+"'";
-		//SuplierKEY
-		ResultSet supKey = stat.executeQuery("select distinct s_suppkey from supplier where s_name = '" + supplier + "';");
-		/*ResultSet rs =stat.executeQuery(""
-				+ "SELECT DISTINCT s_suppkey"
-				+ "FROM supplier"
-				+ "WHERE s_name = '"+ supplier + "';");
-			*/	
-		//int supplierkey = rs.getInt("s_suppkey");
-		if(rs.next()) {
-			suppkey = rs.getInt("s_suppkey");
-		}else {
-			System.out.print("Not Found");
-			return;
+	public static void newuser(Connection conn, Scanner input) throws SQLException{
+		 ResultSet rs = null;
+		System.out.println("Input ammount");
+		int amount = input.nextInt();
+		for(int i =0 ; i<=amount-1; i++) {
+			 int suppKey, natKey, wKey = 0;
+			 Statement stat = conn.createStatement();
+			 String why = input.nextLine();
+			    System.out.println("Please enter warehouse name: ");
+			    String wName = input.nextLine();
+	
+			    System.out.println("Please enter supplier name: ");
+			    String sName = input.nextLine();
+			    rs = stat.executeQuery("select s_suppkey from supplier " + " where s_name = \'"+sName+"\'");
+			    if(rs.next())
+			    {
+			      suppKey = rs.getInt("s_suppkey"); 
+			    }else
+			    {
+			      System.out.println("entry not found");
+			      return;
+			    }
+			    System.out.println("Please enter capacity number: ");
+			    int cap = input.nextInt();
+			    why = input.nextLine();
+	
+			    System.out.println("Please enter address: ");
+			    String address = input.nextLine();
+	
+			    System.out.println("Please enter nation: ");
+			    String nation = input.nextLine().toUpperCase();
+	
+			    rs = stat.executeQuery("select n_nationkey from nation where n_name = \'"+nation+"\'");
+			    if(rs.next())
+			    {
+			      natKey = rs.getInt("n_nationkey"); 
+			    }else
+			    {
+			      System.out.println("entry not found");
+			      return;
+			    }
+	
+			    PreparedStatement pre= conn.prepareStatement("insert into warehouse " +  " values (?, ?, ?, ?, ?, ?)");
+			    		//conn.prepareStatement("INSERT INTO warehouse values ("+ (i+1)+ "," + wName + "," + suppKey +","+ cap +"," + address+ ","+natKey+")");
+				 pre.setInt(1, (i+1));
+				 pre.setString(2, wName);
+				 pre.setInt(3, suppKey);
+				 pre.setInt(4, cap);
+				 pre.setString(5, address);
+				 pre.setInt(6, natKey);
+				 pre.executeUpdate();
+			
+			    System.out.println("Update Executed.");
+	
+			    //pre.close();
+			    stat.close();
 		}
-		//NATIONKEY
-		rs = stat.executeQuery(""
-				+ "SELECT DISTINCT n_nationkey"
-				+ "FROM nation"
-				+ "WHERE n_name ="+nation+"");
-				
-		if(rs.next()) {
-			nationkey = rs.getInt("n_nationkey");
-		}else {
-			System.out.print("Not Found");
-			return;
-		}
-		stat.executeUpdate(""
-				+ "INSERT INTO warehouse VALUES ( '" + warehousename + "', '" + supplier + "', '" +  suppkey+ "', '" +  capacity+ "', '" +  address+ "', '" +  nationkey + "');");
-		
 	}
 	
 	//Find the supplier with the smallest number of warehouses.
 	public static void query1() throws SQLException {
 		System.out.println("Find the supplier with the smallest number of warehouses");
-		Statement stat = conn.createStatement();
-		ResultSet rs = stat.executeQuery(""
-				+ "SELECT s_name "
-				+ "FROM supplier, warehouse "
-				+ "WHERE s_suppkey=w_supplierkey "
-				+ "GROUP BY s_name "
-				+ "HAVING MIN(w_warehousekey)");
-		while(rs.next()) {
-			 System.out.println(rs.getString("s_name"));
+		try {
+			Statement stat = conn.createStatement();
+			ResultSet rs= stat.executeQuery("SELECT s_name FROM (SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey), supplier WHERE counter IN(SELECT min(counter) FROM(SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey)) AND s_suppkey = w_supplierkey;");
+			/*ResultSet rs = stat.executeQuery(""
+					+ "SELECT s_name "
+					+ "FROM supplier, warehouse "
+					+ "WHERE s_suppkey=w_supplierkey "
+					+ "GROUP BY s_name "
+					+ "HAVING MIN(w_warehousekey)");
+					*/
+			while(rs.next()) {
+				 System.out.println("Supplier NAME:  " + rs.getString("s_name"));
+			}
+			rs.close();
+		}catch(SQLException e) {
+			System.err.println(e.getMessage());
 		}
 	}
 	//Find the maximum warehouse capacity across all the suppliers.
@@ -170,6 +209,7 @@ public class CSE111_lab7 {
 		while(rs.next()) {
 			 System.out.println(rs.getString("w_name"));
 		}
+		rs.close();
 	}
 	
 	
@@ -188,6 +228,7 @@ public class CSE111_lab7 {
 		while(rs.next()) {
 			 System.out.println(rs.getString("w_name"));
 		}
+		rs.close();
 	}
 	//For a supplier name given by the user,
 	//find whether all its warehouses are capable to fit all its products (see ps partsupp).
@@ -212,6 +253,8 @@ public class CSE111_lab7 {
 		}else {
 			System.out.println("Suppliers are not able to fit all its products");
 		}
+		rs.close();
+		rs1.close();
 	}
 	//•For a nation given by the user, print all the warehouses in that country, in descending order of their capacity.
 	public static void query5() throws SQLException {
@@ -228,6 +271,7 @@ public class CSE111_lab7 {
 		while(rs.next()) {
 			 System.out.println(rs.getString("w_name"));
 		}
+		rs.close();
 	}
 	//•Supplier#000000002is acquired by Supplier#000000001. 
 	//Update the warehouse table to reflect this change in ownership. 
