@@ -23,7 +23,7 @@ public class CSE111_lab7 {
 					System.out.println("5. Query 2");
 							//Find the maximum warehouse capacity across all the suppliers.");
 					System.out.println("6. Query 3");
-							//List all the warehouses in EUROPE with capacity smaller tha nX, where X is taken as an input from the user.");
+							//List all the warehouses in EUROPE with capacity smaller than X, where X is taken as an input from the user.");
 					System.out.println("7. Query 4");
 							//For a supplier name given by the user, find whether all its warehouses are capable to fit all its products. ");
 					System.out.println("8. Query 5");
@@ -182,7 +182,8 @@ public class CSE111_lab7 {
 		System.out.println("Find the supplier with the smallest number of warehouses");
 		try {
 			Statement stat = conn.createStatement();
-			ResultSet rs= stat.executeQuery("SELECT s_name FROM (SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey), supplier WHERE counter IN(SELECT min(counter) FROM(SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey)) AND s_suppkey = w_supplierkey;");
+			ResultSet rs= stat.executeQuery("select s_name from supplier, (select min(SQ1.wCount) as minCount, s_name as minName from supplier, warehouse, (select count(w_warehousekey) as wCount from warehouse)as SQ1 where s_suppkey = w_supplierkey)as SQ2 where s_name = SQ2.minName;");
+					//"SELECT s_name FROM (SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey), supplier WHERE counter IN(SELECT min(counter) FROM(SELECT w_supplierkey, COUNT(w_name) AS counter FROM warehouse GROUP BY w_supplierkey)) AND s_suppkey = w_supplierkey;");
 			/*ResultSet rs = stat.executeQuery(""
 					+ "SELECT s_name "
 					+ "FROM supplier, warehouse "
@@ -223,8 +224,8 @@ public class CSE111_lab7 {
 				+ "SELECT w_name "
 				+ "FROM warehouse, nation,region "
 				+ "WHERE w_nationkey = n_nationkey AND n_regionkey = r_regionkey "
-				+ 		"AND r_name ='EUROPE' AND w_capacity < '"+x+"'"
-				+ "GROUP BY w_name");
+				+ 		"AND r_name ='EUROPE' AND w_capacity < '"+x+"'");
+				//+ "GROUP BY w_name");
 		while(rs.next()) {
 			 System.out.println(rs.getString("w_name"));
 		}
@@ -235,8 +236,10 @@ public class CSE111_lab7 {
 	public static void query4() throws SQLException {
 		System.out.println("For a supplier name given by the user, find whether all its warehouses are capable to fit all its products ");
 		System.out.println("Enter the Supplier name");
-		String supplier = "'"+input.next()+"'";
+		//String supplier = input.nextLine();
+		
 		Statement stat = conn.createStatement();
+		String supplier = "'"+input.next()+"'";
 		ResultSet rs = stat.executeQuery(""
 				+ "SELECT max(w_capacity) "
 				+ "FROM warehouse, supplier "
@@ -248,13 +251,14 @@ public class CSE111_lab7 {
 				+ "WHERE s_suppkey = ps_suppkey and s_name = " + supplier + "");
 		int product= rs1.getInt("MAX(ps_availqty)");
 		
-		if(product < capacity) {
+		if(product <= capacity) {
 			System.out.println("Suppliers are capable to fit all its products");
 		}else {
 			System.out.println("Suppliers are not able to fit all its products");
 		}
 		rs.close();
 		rs1.close();
+		
 	}
 	//•For a nation given by the user, print all the warehouses in that country, in descending order of their capacity.
 	public static void query5() throws SQLException {
@@ -278,13 +282,21 @@ public class CSE111_lab7 {
 	//The actual names of the suppliers are taken as input from the user,they are not constants.
 	
 	public static void query6() throws SQLException{
-		String supplier1, supplier2;
+		//String supplier1, supplier2;
+		Statement stat = conn.createStatement();
 		System.out.print("Enter the current supplier\n");
-		supplier1 = "'"+input.next()+"'";
+		String supplier1 = "'"+input.next()+"'";
 		System.out.print("Enter the new supplier\n");
-		supplier2 = "'"+input.next()+"'";
-		PreparedStatement ps = conn.prepareStatement("UPDATE warehouse SET w_supplierkey = "+supplier1+" WHERE w_supplierkey = "+supplier2+";");
-		ps.executeUpdate();
+		String supplier2 = "'"+input.next()+"'";
+		ResultSet current = stat.executeQuery("SELECT * FROM supplier WHERE s_name = " + supplier1 + ";");
+		int supplier1key = current.getInt("s_suppkey");
+		ResultSet newsup = stat.executeQuery("SELECT * FROM supplier WHERE s_name = " + supplier2 + ";");
+		int supplier2key = newsup.getInt("s_suppkey");
+		stat.executeUpdate("UPDATE warehouse SET w_supplierkey = " + supplier1key + " WHERE w_supplierkey = " + supplier2key + ";");
+		//PreparedStatement ps = conn.prepareStatement("UPDATE warehouse SET w_supplierkey = "+supplier1+" WHERE w_supplierkey = "+supplier2+";");
+		//ps.executeUpdate();
+		current.close();
+		newsup.close();
 		System.out.println("DATA UPDATED");
 		
 	}
