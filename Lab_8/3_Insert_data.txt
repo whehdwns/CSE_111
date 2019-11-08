@@ -1,0 +1,39 @@
+INSERT INTO customer_index
+SELECT * FROM customer
+
+EXECUTION TIME: Query finished in 0.052 second(s). Rows affected: 1500
+
+INSERT INTO customer_noindex
+SELECT * FROM customer
+
+EXECUTION TIME: Query finished in 0.020 second(s). Rows affected: 1500
+
+INSERT INTO lineitem_index
+SELECT * FROM lineitem
+
+EXECUTION TIME: Query finished in 0.387 second(s). Rows affected: 60175
+
+INSERT INTO lineitem_noindex
+SELECT * FROM lineitem
+
+EXECUTION TIME: Query finished in 0.215 second(s). Rows affected: 60175
+
+INSERT INTO orders_index
+SELECT * FROM orders
+
+EXECUTION TIME: Query finished in 0.263 second(s). Rows affected: 15000
+
+INSERT INTO orders_noindex
+SELECT * FROM orders
+
+EXECUTION TIME: Query finished in 0.072 second(s). Rows affected: 15000
+
+INSERT INTO supplier_index
+SELECT * FROM supplier
+
+EXECUTION TIME: Query finished in 0.023 second(s). Rows affected: 100
+
+INSERT INTO supplier_noindex
+SELECT * FROM supplier
+
+EXECUTION TIME: Query finished in 0.019 second(s). Rows affected: 100

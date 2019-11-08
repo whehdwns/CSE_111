@@ -1,0 +1,6 @@
+UPDATE lineitem_index SET l_discount = l_discount+0.05
+--[20:23:54] Query finished in 1.703 second(s). Rows affected: 60175
+
+
+UPDATE lineitem_noindex SET l_discount = l_discount+0.05
+--[20:24:36] Query finished in 0.300 second(s). Rows affected: 60175

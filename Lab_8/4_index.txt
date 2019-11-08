@@ -1,0 +1,18 @@
+CREATE INDEX customer_mktsegment_index ON customer_index (
+    c_mktsegment
+);
+
+EXECUTION TIME: Query finished in 0.030 second(s).
+
+CREATE INDEX lineitem_returnflag_index ON lineitem_index (
+     l_returnflag
+);
+
+EXECUTION TIME: Query finished in 0.220 second(s).
+
+CREATE INDEX orders_priority_index ON orders_index (
+	o_orderpriority
+);
+
+EXECUTION TIME: Query finished in 0.067 second(s).
+

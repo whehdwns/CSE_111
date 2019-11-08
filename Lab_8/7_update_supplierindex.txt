@@ -1,0 +1,6 @@
+UPDATE supplier_index SET s_acctbal = s_acctbal +1000
+--[20:26:10] Query finished in 0.017 second(s). Rows affected: 100
+
+
+UPDATE supplier_noindex SET s_acctbal = s_acctbal +1000
+--[20:26:34] Query finished in 0.015 second(s). Rows affected: 100
