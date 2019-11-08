@@ -1,0 +1,44 @@
+3.(8 execution times)
+	INSERT statement
+			INDEX(s)	NOINDEX(s)
+	customer	0.052		0.020
+	lineitem	0.387		0.215
+	orders		0.263		0.072
+	supplier	0.023		0.019
+
+4.(3 execution times)
+	Create index
+		customer_mktsegment	0.030s
+		lineitem_returnflag	0.220s
+		orders_priority		0.067s
+5.(30 execution times)
+	Lab3 (15 queries)
+			INDEX(s)	NOINDEX(s)	Differences
+	QUERY 1		0.005		0.008		index < noindex
+	QUERY 2		0.009		0.007		index > noindex
+	QUERY 3		0.010		0.018		index < noindex
+	QUERY 4		0.044		0.043		index > noindex (almost same)
+	QUERY 5		0.002		0.002		index = noindex
+	QUERY 6		0.002		0.009		index < noindex
+	QUERY 7		0.163		0.115		index > noindex
+	QUERY 8		0.008		0.002		index > noindex
+	QUERY 9		0.001		0.002		index < noindex (almost same)
+	QUERY 10	0.019		0.032		index < noindex
+	QUERY 11	0.174		0.109 		index > noindex
+	QUERY 12	0.027		0.024		index > noindex
+	QUERY 13	0.002		0.002		index = noindex
+	QUERY 14	0.018		0.009		index > noindex
+	QUERY 15	0.128		0.114		index > noindex
+	Stat
+		index > noindex:  (8/15)
+		index = noindex:  (2/15)
+		index < noindex:  (5/15)
+								
+6.(2 execution times)
+	Update lineitem
+			INDEX		NOINDEX		Difference
+			1.703s		0.300s		index > noindex
+7.(2 execution times)
+	Update Supplier
+			INDEX		NOINDEX		Difference
+			0.017s		0.015s		index >  noindex (small difference)
