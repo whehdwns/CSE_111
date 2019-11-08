@@ -1,0 +1,15 @@
+CREATE INDEX customer_name_index ON customer_index (
+    c_name
+);
+
+CREATE INDEX supplier_acctbal_index ON supplier_index (
+    s_acctbal
+);
+CREATE INDEX orders_orderdate_index ON orders_index (
+    o_orderdate
+);
+CREATE INDEX lineitem_discount_index ON lineitem_index (
+    l_discount
+);
+
+
