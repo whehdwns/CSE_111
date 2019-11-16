@@ -13,12 +13,13 @@
 	AS
 	SELECT *
 	FROM orders
-10 (not working)
+10 
 	CREAE VIEW Q10
 	AS
-	SELECT p_type, MAX(l_discount) as max_discount
+	SELECT p_type, MAX(l_discount) As max_discount
 	FROM part, lineitem
 	WHERE p_partkey = l_partkey
+	GROUP BY p_type
 15
 	CREATE VIEW Q151 
 	AS 
