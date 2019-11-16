@@ -1,4 +1,3 @@
-SELECT p_type, max_discount
+SELECT *
 FROM Q10
-WHERE p_type LIKE '%ECONOMY%'
-GROUP BY p_type
+WHERE  p_type LIKE '%ECONOMY%'
