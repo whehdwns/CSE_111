@@ -1,20 +1,23 @@
 1.
-	CREATE VIEW Q1 
+	CREATE VIEW Q1
 	AS
-	SELECT *
-	FROM customer
+	SELECT customer.c_name, n_name as c_nation, r_name as c_region, c_custkey
+	FROM customer, region, nation
+	WHERE nation.n_regionkey = region.r_regionkey AND customer.c_nationkey = nation.n_nationkey
 2.
 	CREATE VIEW Q2
 	AS
-	SELECT *
-	FROM supplier
+	SELECT supplier.s_name, n_name as s_nation, r_name as s_nation, s_suppkey, supplier.s_name, r_name as s_region, s_acctbal
+	FROM supplier, region, nation
+	WHERE nation.n_regionkey = region.r_regionkey AND supplier.s_nationkey = nation.n_nationkey
 5.
 	CREATE VIEW Q5
 	AS
-	SELECT *
-	FROM orders
+	SELECT strftime('%Y',orders.o_orderdate) as o_orderyear, o_custkey, o_orderpriority, o_orderkey, o_orderstatus, o_clerk
+	FROM orders, customer
+     	WHERE orders.o_custkey = customer.c_custkey
 10 
-	CREAE VIEW Q10
+	CREATE VIEW Q10
 	AS
 	SELECT p_type, MAX(l_discount) As max_discount
 	FROM part, lineitem
