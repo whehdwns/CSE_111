@@ -1,4 +1,3 @@
-SELECT n_name, COUNT(s_suppkey)
-FROM nation, Q2
-WHERE s_nationkey=n_nationkey
-GROUP BY n_name
+SELECT s_nation, COUNT(s_suppkey)
+FROM Q2
+GROUP BY s_nation
