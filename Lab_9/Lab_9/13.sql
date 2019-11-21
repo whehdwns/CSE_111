@@ -1,8 +1,8 @@
 SELECT COUNT(DISTINCT o_orderkey)
-FROM orders, nation, region, Q2, lineitem, Q1
+FROM orders, Q2, lineitem, Q1
 /*supplier*/
-WHERE o_orderkey= l_orderkey AND l_suppkey=s_suppkey AND s_nationkey=n_nationkey AND n_regionkey=r_regionkey AND r_name='EUROPE' 
+WHERE o_orderkey= l_orderkey AND l_suppkey=s_suppkey AND s_region='EUROPE' 
  /*customer*/
-AND o_custkey=c_custkey AND c_nationkey =(SELECT c_nationkey FROM customer, nation WHERE c_nationkey=n_nationkey AND n_name='CANADA')
+AND o_custkey=c_custkey AND c_nation =(SELECT c_nation FROM Q1 WHERE  c_nation='CANADA')
 
 
