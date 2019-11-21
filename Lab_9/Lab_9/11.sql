@@ -1,5 +1,4 @@
-SELECT r_name, s_name
-FROM nation, region, Q2
-WHERE s_nationkey=n_nationkey AND n_regionkey=r_regionkey
-GROUP BY r_name
+SELECT s_region, s_name
+FROM Q2
+GROUP BY s_region
 HAVING MAX(s_acctbal)
