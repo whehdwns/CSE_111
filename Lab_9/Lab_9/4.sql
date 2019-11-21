@@ -1,4 +1,7 @@
-SELECT DISTINCT s_name, COUNT(p_size)
-FROM Q2, part, nation, partsupp
-WHERE s_nationkey=n_nationkey AND n_name='BRAZIL' AND p_size < '20' AND s_suppkey=ps_suppkey AND ps_partkey=p_partkey
+SELECT s_name, COUNT(p_name)
+FROM Q2, part, partsupp
+WHERE p_partkey = ps_partkey
+    AND s_suppkey = ps_suppkey
+    AND p_size < 20
+    AND s_nation = 'BRAZIL'
 GROUP BY s_name
